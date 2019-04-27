@@ -4,6 +4,14 @@ bool ImageManager::isImageSquare(const cv::Mat& image) {
     return getImageWidth(image) == getImageHeight(image);
 }
 
+bool ImageManager::isImageRead(const cv::Mat &image) {
+    return image.data;
+}
+
+bool ImageManager::isImageValid(const cv::Mat &image) {
+    return isImageRead(image) && isImageSquare(image);
+}
+
 int ImageManager::getImageHeight(const cv::Mat& image) {
     return image.size[0];
 }
@@ -18,15 +26,18 @@ cv::Mat ImageManager::createImage(const std::string &file) {
     return image;
 }
 
-bool ImageManager::isValidImage(const cv::Mat &image) {
-    return image.data;
-}
-
 std::vector<std::string> ImageManager::getImageFiles(const std::string &dir) {
     std::vector<std::string> vec;
-    for(auto& p: std::filesystem::directory_iterator(dir))
-        vec.emplace_back(p.path().filename());
+    for(auto& p: std::filesystem::directory_iterator(dir)) {
+        if(isValidExtension(p.path()))
+            vec.emplace_back(p.path().filename());
+    }
+
     return vec;
+}
+
+bool ImageManager::isValidExtension(const std::filesystem::path &path) {
+    return path.filename().extension() == ".png" || path.filename().extension() == ".jpeg";
 }
 
 std::string ImageManager::getFolder(const std::string &path) {
@@ -65,14 +76,6 @@ void ImageManager::displayImage(const cv::Mat &mat) {
     }
 }
 
-bool ImageManager::isPNG(const std::string &file) {
-    return std::filesystem::path(file).extension() == ".png";
-}
-
-bool ImageManager::isJPEG(const std::string &file) {
-    return std::filesystem::path(file).extension() == ".jpeg";
-}
-
 void ImageManager::saveImage(const std::string &path, const cv::Mat &image) {
     std::string output_image = "/texture_atlas.png";
     try {
@@ -81,6 +84,32 @@ void ImageManager::saveImage(const std::string &path, const cv::Mat &image) {
     } catch(const cv::Exception &ex) {
         std::cerr << ex.what() << std::endl;
     }
+}
+
+std::string ImageManager::writeMetadata(const std::string &image_name, unsigned int x_coord, const cv::Mat &image) {
+    return image_name + " | " + std::to_string(x_coord) + " | 0 | " + std::to_string(getImageWidth(image)) + " | " + std::to_string(getImageHeight(image));
+}
+
+void ImageManager::removeTextureAtlas(const std::string &dir_name) {
+    std::string texture_atlas;
+
+    if(getOS(dir_name) == OperatingSystem::LINUX) {
+        texture_atlas = dir_name + "/texture_atlas.png";
+        std::filesystem::remove(texture_atlas);
+    } else if(getOS(dir_name) == OperatingSystem::WINDOWS) {
+        texture_atlas = dir_name + "\\texture_atlas.png";
+    }
+}
+
+OperatingSystem ImageManager::getOS(const std::string &dir_name) {
+    OperatingSystem os;
+
+    if(dir_name.find("/") != std::string::npos)
+        os = OperatingSystem::LINUX;
+    else
+        os = OperatingSystem::WINDOWS;
+
+    return os;
 }
 
 

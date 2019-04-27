@@ -1,4 +1,4 @@
-image name | x coordinate | y coordinate | width | height
+image name | x coordinate | y coordinate | image width | image height
 031-q&a.png | 0 | 0 | 512 | 512
 006-biology.png | 512 | 0 | 512 | 512
 005-book.png | 1024 | 0 | 512 | 512
