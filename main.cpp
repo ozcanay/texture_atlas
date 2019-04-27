@@ -25,30 +25,18 @@ bool isArgDirectory(char** argv) {
     return fs::is_directory(argv[1]);
 }
 
-std::string getFolder(const std::string &path) {
-    std::string folder;
-    std::size_t found = path.find_last_of("/\\");
-
-    if(path.find("/") != std::string::npos)
-        folder = path.substr(found + 1) + "/";
-    else
-        folder = path.substr(found + 1) + "\\";
-
-    return folder;
-}
-
 int main(int argc, char** argv )
 {
     if(!isArgNumExpected(argc) || !isArgDirectory(argv)) return -1;
 
     std::string path = argv[1];
-    std::string folder_name = getFolder(path);
+    std::string folder_name = im::getFolder(path);
     std::vector<cv::Mat> images;
 
-    std::vector<std::string> imageNames = im::getImageFiles(path);
-    for(auto& imageName : imageNames) {
+    std::vector<std::string> image_names = im::getImageFiles(path);
+    for(auto& image_name : image_names) {
         cv::Mat image;
-        image = im::createImage(folder_name + imageName);
+        image = im::createImage(folder_name + image_name);
 
         if(im::isValidImage(image) && im::isImageSquare(image))
             images.emplace_back(image);

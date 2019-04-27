@@ -13,8 +13,12 @@ namespace ImageManager {
     cv::Mat createImage(const std::string &file);
     bool isImageSquare(const cv::Mat &image);
     bool isValidImage(const cv::Mat &image);
+    bool isPNG(const std::string &file);
+    bool isJPG(const std::string &file);
+    void saveImage(const cv::Mat &image);
+    void createMetadata(const cv::Mat &image);
     std::vector<std::string> getImageFiles(const std::string &dir);
-    std::string getImageFolder(const std::string &dir);
+    std::string getFolder(const std::string &path);
     cv::Mat concatenateImages(const std::vector<cv::Mat> &images);
     void displayImage(const cv::Mat &mat);
     int getImageHeight(const cv::Mat& image);

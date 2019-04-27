@@ -32,8 +32,16 @@ std::vector<std::string> ImageManager::getImageFiles(const std::string &dir) {
     return vec;
 }
 
-std::string ImageManager::getImageFolder(const std::string &dir) {
+std::string ImageManager::getFolder(const std::string &path) {
+    std::string folder;
+    std::size_t found = path.find_last_of("/\\");
 
+    if(path.find("/") != std::string::npos)
+        folder = path.substr(found + 1) + "/";
+    else
+        folder = path.substr(found + 1) + "\\";
+
+    return folder;
 }
 
 cv::Mat ImageManager::concatenateImages(const std::vector<cv::Mat> &images) {
