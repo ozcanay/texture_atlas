@@ -25,24 +25,32 @@ bool isArgDirectory(char** argv) {
     return fs::is_directory(argv[1]);
 }
 
+std::string getPath(char** argv) {
+    return argv[1];
+}
+
 int main(int argc, char** argv )
 {
     if(!isArgNumExpected(argc) || !isArgDirectory(argv)) return -1;
 
-    std::string path = argv[1];
+    std::string path = getPath(argv);
     std::string folder_name = im::getFolder(path);
     std::vector<cv::Mat> images;
 
     std::vector<std::string> image_names = im::getImageFiles(path);
-    for(auto& image_name : image_names) {
-        cv::Mat image;
-        image = im::createImage(folder_name + image_name);
 
-        if(im::isValidImage(image) && im::isImageSquare(image))
-            images.emplace_back(image);
+    for(auto& image_name : image_names) {
+        if(im::isPNG(image_name) || im::isJPEG(image_name)) {
+            cv::Mat image;
+            image = im::createImage(folder_name + image_name);
+
+            if(im::isValidImage(image) && im::isImageSquare(image))
+                images.emplace_back(image);
+        }
     }
 
-    cv::Mat result_mat = im::concatenateImages(images);
-    im::displayImage(result_mat);
+    cv::Mat texture_atlas = im::concatenateImages(images);
+    im::displayImage(texture_atlas);
+    im::saveImage(getPath(argv), texture_atlas);
 }
 

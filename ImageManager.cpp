@@ -1,6 +1,3 @@
-//
-// Created by ozcanay on 4/25/19.
-//
 #include "ImageManager.h"
 
 bool ImageManager::isImageSquare(const cv::Mat& image) {
@@ -59,9 +56,27 @@ cv::Mat ImageManager::concatenateImages(const std::vector<cv::Mat> &images) {
 
 void ImageManager::displayImage(const cv::Mat &mat) {
     try {
-        namedWindow("final", cv::WINDOW_AUTOSIZE );
-        imshow("final", mat);
+        std::string title = "Texture Atlas";
+        namedWindow(title, cv::WINDOW_AUTOSIZE );
+        imshow(title, mat);
         cv::waitKey(0);
+    } catch(const cv::Exception &ex) {
+        std::cerr << ex.what() << std::endl;
+    }
+}
+
+bool ImageManager::isPNG(const std::string &file) {
+    return std::filesystem::path(file).extension() == ".png";
+}
+
+bool ImageManager::isJPEG(const std::string &file) {
+    return std::filesystem::path(file).extension() == ".jpeg";
+}
+
+void ImageManager::saveImage(const std::string &path, const cv::Mat &image) {
+    try {
+        cv::imwrite(path + "/texture_atlas.png", image);
+        std::cout << path + "/texture_atlas.png" << std::endl;
     } catch(const cv::Exception &ex) {
         std::cerr << ex.what() << std::endl;
     }
