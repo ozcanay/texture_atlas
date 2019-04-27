@@ -74,12 +74,14 @@ bool ImageManager::isJPEG(const std::string &file) {
 }
 
 void ImageManager::saveImage(const std::string &path, const cv::Mat &image) {
+    std::string output_image = "/texture_atlas.png";
     try {
-        cv::imwrite(path + "/texture_atlas.png", image);
-        std::cout << path + "/texture_atlas.png" << std::endl;
+        std::cout << path + output_image << std::endl;
+        cv::imwrite(path + output_image, image);
     } catch(const cv::Exception &ex) {
         std::cerr << ex.what() << std::endl;
     }
 }
+
 
 

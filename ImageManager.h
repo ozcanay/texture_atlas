@@ -16,7 +16,6 @@ namespace ImageManager {
     bool isPNG(const std::string &file);
     bool isJPEG(const std::string &file);
     void saveImage(const std::string &path, const cv::Mat &image);
-    void createMetadata(const cv::Mat &image);
     std::vector<std::string> getImageFiles(const std::string &dir);
     std::string getFolder(const std::string &path);
     cv::Mat concatenateImages(const std::vector<cv::Mat> &images);
