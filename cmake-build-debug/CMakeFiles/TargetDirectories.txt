@@ -1,0 +1,3 @@
+/home/ozcanay/CLionProjects/texture_atlas/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/ozcanay/CLionProjects/texture_atlas/cmake-build-debug/CMakeFiles/texture_atlas.dir
+/home/ozcanay/CLionProjects/texture_atlas/cmake-build-debug/CMakeFiles/edit_cache.dir
