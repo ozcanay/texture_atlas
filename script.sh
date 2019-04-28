@@ -17,10 +17,10 @@ echo Creating build directory inside cloned opencv directory
 mkdir build
 cd build
 cmake -D CMAKE_BUILD_TYPE=Release \
-	-D CMAKE_INSTALL_PREFIX=/usr/local \
-	-D OPENCV_EXTRA_MODULES_PATH=~/texture_atlas/opencv_contrib/modules \
-	-D BUILD_EXAMPLES=ON \
-	-D BUILD_DOCS=ON ..
+        -D CMAKE_INSTALL_PREFIX=/usr/local \
+        -D OPENCV_EXTRA_MODULES_PATH=~/texture_atlas/opencv_contrib/modules \
+        -D BUILD_EXAMPLES=ON \
+        -D BUILD_DOCS=ON ..
 make -j7
 sudo make install
 
@@ -28,8 +28,3 @@ sudo make install
 #cmake ..
 #cmake --build .
 #texture_atlas <DIR>
-
-	
-
-
-
