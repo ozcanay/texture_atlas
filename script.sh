@@ -23,8 +23,10 @@ cmake -D CMAKE_BUILD_TYPE=Release \
         -D BUILD_DOCS=ON ..
 make -j7
 sudo make install
-
-#ozcanay@ubuntu:~/CLionProjects/texture_atlas/cmake-build-debug$
-#cmake ..
-#cmake --build .
-#texture_atlas <DIR>
+echo Cloning the project repository...
+cd ~
+rm -rf ~/texture_atlas
+git clone https://github.com/ozcanay/texture_atlas.git
+cd ~/texture_atlas/cmake-build-debug
+echo Building the project...
+cmake .. && cmake --build . && ./texture_atlas ~/texture_atlas/cmake-build-debug/iconpack
