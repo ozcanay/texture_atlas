@@ -6,7 +6,7 @@ sudo apt-get install build-essential
 echo Installing Required Packages..
 sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
 echo Creating Working Directory
-rm -rf ~/texture_atlas
+sudo rm -rf ~/texture_atlas
 mkdir ~/texture_atlas
 cd ~/texture_atlas
 echo Cloning opencv git repositories...
@@ -23,9 +23,12 @@ cmake -D CMAKE_BUILD_TYPE=Release \
         -D BUILD_DOCS=ON ..
 make -j7
 sudo make install
+echo Modifying the directory opencv folder resides in.
+cd /usr/local/include/opencv4
+sudo mv opencv2 .. && cd .. && sudo rm -rf opencv4
 echo Cloning the project repository...
 cd ~
-rm -rf ~/texture_atlas
+sudo rm -rf ~/texture_atlas
 git clone https://github.com/ozcanay/texture_atlas.git
 cd ~/texture_atlas/cmake-build-debug
 echo Building the project...
