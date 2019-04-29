@@ -1,15 +1,7 @@
 #include "ImageManager.h"
 
-bool ImageManager::isImageSquare(const cv::Mat& image) {
-	return getImageWidth(image) == getImageHeight(image);
-}
-
 bool ImageManager::isImageRead(const cv::Mat& image) {
 	return image.data;
-}
-
-bool ImageManager::isImageValid(const cv::Mat& image) {
-	return isImageRead(image) && isImageSquare(image);
 }
 
 int ImageManager::getImageHeight(const cv::Mat& image) {
@@ -40,25 +32,13 @@ bool ImageManager::isValidExtension(const std::filesystem::path& path) {
 	return path.filename().extension() == ".png" || path.filename().extension() == ".jpeg";
 }
 
-std::string ImageManager::getFolder(const std::string& path) {
-	std::string folder;
-	std::size_t found = path.find_last_of("/\\");
-
-	if (path.find("/") != std::string::npos)
-		folder = path.substr(found + 1) + "/";
-	else
-		folder = path.substr(found + 1) + "\\";
-
-	return folder;
-}
-
-cv::Mat ImageManager::concatenateImages(const std::vector<cv::Mat> & images) {
+cv::Mat ImageManager::concatenateImages(const std::vector<cv::Mat>& images) {
 	cv::Mat mat;
 
 	try {
 		cv::hconcat(images, mat);
 	}
-	catch (const cv::Exception & ex) {
+	catch (const cv::Exception& ex) {
 		std::cerr << ex.what();
 		std::cout << "Dimensions must hold equal for all the images in the folder." << std::endl;
 	}
@@ -66,7 +46,7 @@ cv::Mat ImageManager::concatenateImages(const std::vector<cv::Mat> & images) {
 	return mat;
 }
 
-void ImageManager::displayImage(const cv::Mat & mat) {
+void ImageManager::displayImage(const cv::Mat& mat) {
 	try {
 		std::string title = "Texture Atlas";
 		namedWindow(title, cv::WINDOW_AUTOSIZE);
@@ -78,10 +58,10 @@ void ImageManager::displayImage(const cv::Mat & mat) {
 	}
 }
 
-void ImageManager::saveImage(const std::string & path, const cv::Mat & image) {
-	std::string output_image = "/texture_atlas.png";
+void ImageManager::saveImage(const std::string & path, const cv::Mat& image) {
+	std::string output_image = getFileDelimiter(path) + "texture_atlas.png";
+	std::cout << "Created texture atlas is located at: " << path + output_image << std::endl;
 	try {
-		std::cout << path + output_image << std::endl;
 		cv::imwrite(path + output_image, image);
 	}
 	catch (const cv::Exception & ex) {
@@ -89,29 +69,43 @@ void ImageManager::saveImage(const std::string & path, const cv::Mat & image) {
 	}
 }
 
-std::string ImageManager::writeMetadata(const std::string & image_name, unsigned int x_coord, const cv::Mat & image) {
+std::string ImageManager::writeMetadata(const std::string& image_name, unsigned int x_coord, const cv::Mat& image) {
 	return image_name + " | " + std::to_string(x_coord) + " | 0 | " + std::to_string(getImageWidth(image)) + " | " + std::to_string(getImageHeight(image));
 }
 
-void ImageManager::removeTextureAtlas(const std::string & dir_name) {
+void ImageManager::removeTextureAtlas(const std::string& dir_name) {
 	std::string texture_atlas;
-
-	if (getOS(dir_name) == OperatingSystem::LINUX) {
-		texture_atlas = dir_name + "/texture_atlas.png";
-		std::filesystem::remove(texture_atlas);
-	}
-	else if (getOS(dir_name) == OperatingSystem::WINDOWS) {
-		texture_atlas = dir_name + "\\texture_atlas.png";
-	}
+	texture_atlas = dir_name + getFileDelimiter(dir_name) + "texture_atlas.png";
+	std::filesystem::remove(texture_atlas);
 }
 
-OperatingSystem ImageManager::getOS(const std::string & dir_name) {
-	OperatingSystem os;
+std::string ImageManager::getFileDelimiter(const std::string& dir_name) {
+	std::string file_delimiter;
 
+	// Linux file delimiter
 	if (dir_name.find("/") != std::string::npos)
-		os = OperatingSystem::LINUX;
-	else
-		os = OperatingSystem::WINDOWS;
+		file_delimiter = "/";
+	else // Windows file delimiter
+		file_delimiter = "\\";
 
-	return os;
+	return file_delimiter;
+}
+
+bool ImageManager::areImagesSameHeight(std::vector<cv::Mat> images) {
+	bool areImagesSameHeight = true;
+	std::unordered_set<int> uniqueImageHeightValues;
+
+	for (auto& image : images) {
+		uniqueImageHeightValues.insert(getImageHeight(image));
+	}
+
+	if (uniqueImageHeightValues.size() == 1) {
+		std::cout << "Height values of all images are equal. Concatenating..." << std::endl;
+	}
+	else {
+		areImagesSameHeight = false;
+		std::cout << "Height values of all images must be equal to concatenate images horizontally." << std::endl;
+	}
+
+	return areImagesSameHeight;
 }

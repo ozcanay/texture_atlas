@@ -23,9 +23,6 @@ cmake -D CMAKE_BUILD_TYPE=Release \
         -D BUILD_DOCS=ON ..
 make -j7
 sudo make install
-echo Modifying the directory opencv folder resides in.
-cd /usr/local/include/opencv4
-sudo mv opencv2 .. && cd .. && sudo rm -rf opencv4
 echo Cloning the project repository...
 cd ~
 sudo rm -rf ~/texture_atlas
